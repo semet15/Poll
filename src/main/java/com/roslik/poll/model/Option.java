@@ -1,0 +1,34 @@
+package com.roslik.poll.model;
+
+import lombok.Data;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
+@Entity
+@Table(name = "option")
+@Data
+public class Option {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "option_id")
+    private int id;
+
+    @NotEmpty
+    @Column(name = "description", nullable = false)
+    private String description;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "option_user",
+            joinColumns = {@JoinColumn(name = "option_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+    )
+    private List<User> users;
+
+    @ManyToOne
+    @JoinColumn(name = "f_poll_id")
+    private Poll poll;
+}
