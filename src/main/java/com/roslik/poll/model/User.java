@@ -3,6 +3,7 @@ package com.roslik.poll.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -22,4 +23,8 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     private List<Option> options;
+
+    @Valid
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Poll> polls;
 }

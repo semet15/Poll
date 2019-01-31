@@ -1,5 +1,6 @@
 package com.roslik.poll.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -26,9 +27,11 @@ public class Option {
             joinColumns = {@JoinColumn(name = "option_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
+    @JsonIgnore
     private List<User> users;
 
     @ManyToOne
     @JoinColumn(name = "f_poll_id")
+    @JsonIgnore
     private Poll poll;
 }

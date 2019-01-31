@@ -1,5 +1,6 @@
 package com.roslik.poll.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -24,9 +25,10 @@ public class Poll {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @NotEmpty
-    @Column(name = "link", nullable = false)
-    private String link;
+    @ManyToOne
+    @JoinColumn(name = "f_user_id")
+    @JsonIgnore
+    private User owner;
 
     @Valid
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
