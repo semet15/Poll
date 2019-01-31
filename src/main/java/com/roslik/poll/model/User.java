@@ -1,5 +1,6 @@
 package com.roslik.poll.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ public class User {
     private int id;
 
     @NotEmpty
-    @Column(name = "ip", length = 20, nullable = false)
+    @Column(name = "ip", length = 20, unique = true, nullable = false)
     private String ip;
 
     @ManyToMany(mappedBy = "users")
@@ -27,4 +28,5 @@ public class User {
     @Valid
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Poll> polls;
+
 }

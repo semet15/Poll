@@ -33,4 +33,5 @@ public class Poll {
     @Valid
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Option> options;
+
 }

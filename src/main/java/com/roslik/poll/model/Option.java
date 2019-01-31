@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Entity
-@Table(name = "option")
+@Table(name = "_option")
 @Data
 public class Option {
 
@@ -21,7 +21,7 @@ public class Option {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "option_user",
             joinColumns = {@JoinColumn(name = "option_id")},
@@ -34,4 +34,5 @@ public class Option {
     @JoinColumn(name = "f_poll_id")
     @JsonIgnore
     private Poll poll;
+
 }
