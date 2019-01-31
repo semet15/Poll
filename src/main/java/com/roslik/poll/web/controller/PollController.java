@@ -1,7 +1,6 @@
 package com.roslik.poll.web.controller;
 
 import com.roslik.poll.exception.PollNotFoundException;
-import com.roslik.poll.model.Option;
 import com.roslik.poll.model.Poll;
 import com.roslik.poll.service.PollService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -73,8 +71,9 @@ public class PollController {
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
+    // return [{"option id" : "count of vote"}]
     @GetMapping(value ="/{id}/stats")
-    public ResponseEntity<Map<Option, Integer>> pollStats(@PathVariable("id") Integer id) {
+    public ResponseEntity<Map<Integer, Integer>> pollStats(@PathVariable("id") Integer id) {
         return new ResponseEntity<>(pollService.getStats(id), HttpStatus.OK);
     }
 

@@ -19,7 +19,7 @@ public class Poll {
     private int id;
 
     @Column(name = "enabled", nullable = false)
-    private boolean enabled;
+    private Boolean enabled;
 
     @NotEmpty
     @Column(name = "description", nullable = false)

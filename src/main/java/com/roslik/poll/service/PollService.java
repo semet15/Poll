@@ -1,6 +1,5 @@
 package com.roslik.poll.service;
 
-import com.roslik.poll.model.Option;
 import com.roslik.poll.model.Poll;
 
 import java.util.List;
@@ -19,5 +18,5 @@ public interface PollService {
 
     void vote(Integer pollId, Integer optionId, String ip);
 
-    Map<Option, Integer> getStats(Integer id);
+    Map<Integer, Integer> getStats(Integer id);
 }

@@ -1,15 +1,13 @@
 package com.roslik.poll.service.impl;
 
-import com.roslik.poll.exception.AccessDeniedException;
-import com.roslik.poll.exception.ChoiceMadeException;
-import com.roslik.poll.exception.OptionNotFoundException;
-import com.roslik.poll.exception.PollNotFoundException;
+import com.roslik.poll.exception.*;
 import com.roslik.poll.model.Option;
 import com.roslik.poll.model.Poll;
 import com.roslik.poll.model.User;
 import com.roslik.poll.repository.PollRepository;
 import com.roslik.poll.repository.UserRepository;
 import com.roslik.poll.service.PollService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class PollServiceImpl implements PollService {
 
     private final PollRepository pollRepository;
@@ -61,6 +60,7 @@ public class PollServiceImpl implements PollService {
         poll.setEnabled(true);
         poll.getOptions().forEach(o -> o.setPoll(poll));
 
+        log.info("New poll is created");
         return pollRepository.save(poll);
     }
 
@@ -76,6 +76,7 @@ public class PollServiceImpl implements PollService {
 
         poll.setEnabled(false);
         pollRepository.save(poll);
+        log.info("Poll " + id + " is disabled");
     }
 
     @Override
@@ -84,13 +85,17 @@ public class PollServiceImpl implements PollService {
 
         Poll poll = pollRepository.findById(pollId).orElseThrow(() -> new PollNotFoundException(pollId));
 
+        if(!poll.getEnabled()) {
+            throw new FinishedPollException(poll.getId());
+        }
+
         Option option = poll.getOptions().stream()
                                         .filter(o -> o.getId() == optionId)
                                         .findAny()
                                         .orElseThrow(() ->  new OptionNotFoundException(optionId, pollId));
 
         if(option.getUsers().stream().anyMatch(u -> u.getIp().equals(ip))) {
-            throw new ChoiceMadeException(optionId);
+            throw new ChoiceMadeException();
         } else {
             User user = null;
             Optional<User> userDb = userRepository.findByIp(ip);
@@ -113,10 +118,10 @@ public class PollServiceImpl implements PollService {
 
     @Override
     @Transactional(readOnly = true)
-    public Map<Option, Integer> getStats(Integer id) {
+    public Map<Integer, Integer> getStats(Integer id) {
 
         Poll poll = pollRepository.findById(id).orElseThrow(() -> new PollNotFoundException(id));
 
-        return poll.getOptions().stream().collect(Collectors.toMap(opt -> opt, opt -> opt.getUsers().size()));
+        return poll.getOptions().stream().collect(Collectors.toMap(Option::getId, opt -> opt.getUsers().size()));
     }
 }
