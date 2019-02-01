@@ -1,7 +1,5 @@
 Test task. Poll server standalone application 
 
-Конфигуращия MySQL:
+По умолчанию база данных in-memory.
 
- username: root
-
- password: root
+Для использования MySQL раскоментируйте записи в application.properties
